@@ -78,7 +78,8 @@ src/
 ## Roadmap por fases
 
 1. ✅ **Setup inicial** — Next.js + TS + Tailwind + conexión a Supabase + estructura.
-2. ⬜ **Autenticación** — login con Google vía Supabase Auth, sesión, perfil.
+2. 🔧 **Autenticación** — login con Google vía Supabase Auth, sesión, perfil.
+   Código listo; falta configurar Supabase + Google (ver `docs/fase-2-setup-auth.md`).
 3. ⬜ **Viajes e invitaciones** — crear viaje, invitar por link, roles, RLS.
 4. ⬜ **Itinerario, vuelos y hospedaje** — carga y edición manual.
 5. ⬜ **Gastos compartidos** — división y cálculo de saldos.
