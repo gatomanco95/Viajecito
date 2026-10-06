@@ -102,13 +102,6 @@ window.NZ_DATA = (function () {
     { id: 'vegano', name: 'Plant-based', icon: '🌱', color: '#3d7a3a', pitch: 'Proteína vegetal, legumbres y semillas para tu semana.', items: [['proteina-vegana', 1], ['lentejas', 1000], ['garbanzos', 1000], ['mix-semillas', 250]] },
   ];
 
-  // Kits armados: el primer pedido en un clic
-  const kits = [
-    { id: 'kit-inicio', name: 'Kit Primera Compra', note: 'Lo que más piden los clientes nuevos', items: [['mix-premium', 250], ['granola', 500], ['chia', 250], ['almendras', 250]], off: 10 },
-    { id: 'kit-desayuno', name: 'Kit Desayuno Semanal', note: 'Para 7 desayunos completos', items: [['avena', 1000], ['granola', 500], ['pasta-mani', 1], ['arandanos', 100]], off: 8 },
-    { id: 'kit-gym', name: 'Kit Gym Esencial', note: 'Proteína + creatina + snack', items: [['whey', 1], ['creatina', 1], ['mix-premium', 250]], off: 7 },
-  ];
-
   ['mix-premium', 'granola', 'almendras', 'chia', 'avena', 'pasta-mani', 'nuez', 'datiles'].forEach((id) => {
     const p = products.find((x) => x.id === id);
     if (p) p.starter = true;
@@ -123,5 +116,5 @@ window.NZ_DATA = (function () {
     ['Sofía Benítez', 'hace 1 mes', 'Soy celíaca y acá encuentro todo separado y bien rotulado. Gracias por la paciencia!'],
   ];
 
-  return { aisles, tagsInfo, products, goals, kits, reviews, freeShipping: 15000 };
+  return { aisles, tagsInfo, products, goals, reviews, freeShipping: 15000 };
 })();

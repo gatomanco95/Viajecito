@@ -1,4 +1,4 @@
-# NutriZone · Maqueta 2.0 (Inicio + Catálogo)
+# NutriZone · Maqueta 2.1 (Inicio + Productos)
 
 Maqueta navegable para probar mejoras antes de pasarlas a la web real (nutrizone.com.ar).
 Usa la misma identidad que la web actual: blanco, negro, naranja `#ff691f`, Inter, logo, video del hero y fotos del local.
@@ -9,40 +9,40 @@ Usa la misma identidad que la web actual: blanco, negro, naranja `#ff691f`, Inte
 
 "Los clientes nuevos se pierden con los productos y no hay un orden para empezar a pedir."
 
-## Qué cambia
+## Versión 2.1: más simple
 
-### Inicio
-1. **Hero con "pedido en vivo"**: una tarjeta animada muestra cómo se arma un pedido (productos que entran, la barra de envío gratis que se llena y los pasos Elegís → Pesamos → Retirás). Así se entiende en 3 segundos cómo funciona comprar a granel online.
-2. **CTA principal "Empezar mi pedido"** y otro secundario, **"¿No sabés qué llevar?"**, que abre el asistente.
-3. **"Tu pedido en 3 pasos"**: explica el proceso con ilustraciones animadas (una balanza que cambia de peso y un camión en marcha).
-4. **Comprá por objetivo**: Desayunos, Snacks, Sin TACC, Deporte, Keto y Plant-based. Cada uno muestra una canasta sugerida que se agrega con un clic.
-5. **Pasillos**: las categorías ordenadas como el recorrido del local ("Pasillo 1 de 9").
-6. **Más vendidos** en un carrusel con ranking 1–10, que se puede arrastrar.
-7. **Kits armados con descuento** para hacer el primer pedido en un clic.
-8. Reseñas en una marquesina continua, horario del local con "Abierto ahora" en vivo y parallax en las fotos.
+Pensada para un público de 25 a 60 años: menos información, letra más grande y botones más cómodos.
 
-### Catálogo
-1. **Atajos para el primer pedido**: Lo esencial para empezar, Armalo por objetivo y Kits.
-2. **Vista por pasillos** con una barra sticky que marca en qué pasillo estás mientras scrolleás (scrollspy).
-3. **Selector de peso en cada tarjeta** (100 g / 250 g / 500 g / 1 kg), con el precio que se actualiza al momento y el precio por kilo visible.
-4. El botón "Agregar" se convierte en **contador (− 1 +)** y el producto **vuela al carrito**.
-5. **Filtros** por pasillo, preferencias (Sin TACC, Vegano, Keto…), precio y stock, con chips para quitarlos. En celular se abren como una hoja desde abajo.
-6. **Vista rápida** de cada producto, con "Va bien con…" para sumar productos relacionados.
-7. Grilla o lista, varios órdenes, skeletons mientras carga y una pantalla vacía que sugiere alternativas.
+### Inicio (7 bloques, antes eran 11)
+1. **Hero** con un solo mensaje y dos botones: "Ver productos" y "Ayudame a elegir". En compu se ve una tarjeta con un pedido de ejemplo armándose; en celular se oculta.
+2. **Beneficios en una línea**: envío gratis, retiro sin costo, 10% OFF en efectivo y productos frescos.
+3. **¿Qué estás buscando?**: las 9 categorías.
+4. **Los más vendidos**: un carrusel con flechas.
+5. **Comprar es así de simple**: 3 pasos, más los botones de ayuda y WhatsApp.
+6. **Reseñas** de Google.
+7. **El local**: dirección, "Abierto ahora / Cerrado" en vivo, horario y botón "Cómo llegar".
 
-### En toda la web
-- **Buscador instantáneo** (⌘K / Ctrl+K o `/`) con resultados resaltados y navegación con el teclado.
-- **Asistente "¿Qué llevo?"** en 2 preguntas (objetivo y para quién) que arma la lista con cantidades.
-- **Carrito lateral** con barra de envío gratis (que muestra cuánto falta), opción de retiro o envío, sugerencias para completar el pedido y el ahorro de los kits.
-- **Barra inferior tipo app en celular** (Inicio, Catálogo, Buscar, Carrito).
-- Barra de progreso de scroll, header que se achica al bajar, anuncios rotativos, partículas sobre el video y botón magnético.
+Se sacaron los kits, la sección de objetivos (quedó solo dentro del asistente), la marquesina de categorías, el bloque oscuro de estadísticas, las partículas y el texto animado del buscador.
+
+### Productos (ex Catálogo)
+- Dos atajos: "¿Primera vez? Empezá por lo esencial" y "Ayudame a elegir".
+- Productos agrupados por categoría, con una barra fija que marca dónde estás.
+- Selector de peso con precio al instante, botón "Agregar" grande que pasa a − 1 +.
+- Filtros por categoría, preferencias, precio y stock (en celular se abren desde abajo).
+
+### Accesibilidad y lectura
+- Texto base de 17 px (antes 16), nombres de producto de 17 px y precios de 22 px.
+- Botones de 48–58 px de alto y selector de peso de 36 px.
+- Grises más oscuros para que se lea mejor.
+- El panel de variantes suma la opción **Tamaño de letra: Grande**.
 
 ## Panel "🧪 Probar variantes"
 Abajo a la izquierda. Permite comparar en vivo:
-- Hero: con pedido animado o clásico (como el actual).
-- Animaciones: completas, suaves o sin animaciones.
-- Catálogo: por pasillos o en una grilla única.
-- Tarjetas: bolsa kraft ilustrada o minimal.
+- Hero: con pedido de ejemplo o solo texto.
+- Animaciones: completas, suaves o ninguna.
+- Tamaño de letra: normal o grande.
+- Productos: por categoría o todos juntos.
+- Tarjetas: bolsa ilustrada o minimal.
 
 ## Notas para pasarlo a la web real
 - Los productos son datos de ejemplo (`js/data.js`). En la web real salen de Supabase (`products` / `product_variants`).

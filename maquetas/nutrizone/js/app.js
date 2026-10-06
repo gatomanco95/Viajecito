@@ -16,7 +16,7 @@
   };
 
   // ───────── Laboratorio (variantes) ─────────
-  const lab = Object.assign({ hero: 'pedido', motion: 'full', catalog: 'pasillos', card: 'ilustrada' }, store.get('lab', {}));
+  const lab = Object.assign({ hero: 'pedido', motion: 'full', catalog: 'pasillos', card: 'ilustrada', text: 'normal' }, store.get('lab', {}));
   const motionOn = () => !reduced && document.body.dataset.motion !== 'off';
   function applyLab() {
     Object.entries(lab).forEach(([k, v]) => { document.body.dataset[k] = v; });
@@ -72,7 +72,6 @@
     const cc = $('#cartCount'); cc.textContent = t.count; cc.classList.toggle('has', t.count > 0);
     const tb = $('#tabBadge'); tb.textContent = t.count; tb.hidden = t.count === 0;
     $('#cartSubtotal').textContent = money(t.sub);
-    $('#cartSaveRow').hidden = t.save <= 0; $('#cartSave').textContent = '−' + money(t.save);
     const left = D.freeShipping - t.sub;
     const pct = Math.min(100, (t.sub / D.freeShipping) * 100);
     $('#shipBar').style.width = pct + '%'; $('#shipTruck').style.left = pct + '%';
@@ -82,11 +81,11 @@
       : left > 0 ? 'Te faltan <b>' + money(left) + '</b> para el envío gratis a Gerli' : '🎉 ¡Tenés <b>envío gratis</b> a Gerli!';
     const list = $('#cartList');
     if (!cart.length) {
-      list.innerHTML = '<li class="cart-empty"><div class="big">🧺</div><p><b>Tu pedido está vacío</b></p><p>Empezá por los más vendidos o elegí un kit.</p></li>';
+      list.innerHTML = '<li class="cart-empty"><div class="big">🧺</div><p><b>Tu pedido está vacío</b></p><p>Empezá por los más vendidos o usá el buscador.</p></li>';
     } else {
       list.innerHTML = cart.map((i) => {
         const p = byId[i.id]; const line = priceFor(p, i.qty) * i.count * (1 - i.off / 100);
-        return '<li class="cart-item"><span class="ci-em">' + p.emoji + '</span><div class="ci-n">' + esc(p.name) + '<small>' + wLabel(i.qty, p) + (i.off ? ' · kit −' + i.off + '%' : '') + '</small></div><div class="ci-r"><b>' + money(line) + '</b><div class="mini-step"><button type="button" data-line="' + keyOf(i) + '" data-d="-1" aria-label="Quitar uno">−</button><span>' + i.count + '</span><button type="button" data-line="' + keyOf(i) + '" data-d="1" aria-label="Sumar uno">+</button></div></div></li>';
+        return '<li class="cart-item"><span class="ci-em">' + p.emoji + '</span><div class="ci-n">' + esc(p.name) + '<small>' + wLabel(i.qty, p) + '</small></div><div class="ci-r"><b>' + money(line) + '</b><div class="mini-step"><button type="button" data-line="' + keyOf(i) + '" data-d="-1" aria-label="Quitar uno">−</button><span>' + i.count + '</span><button type="button" data-line="' + keyOf(i) + '" data-d="1" aria-label="Sumar uno">+</button></div></div></li>';
       }).join('');
     }
     const inCart = new Set(cart.map((i) => i.id));
@@ -221,12 +220,8 @@
     if (qa) { const p = byId[qa.dataset.quickadd]; addToCart(p.id, getW(p)); flyToCart(qa, p.emoji); return; }
     const qv = e.target.closest('[data-qv]');
     if (qv && !e.target.closest('.carousel.dragging')) { openQuickView(qv.dataset.qv); return; }
-    const kit = e.target.closest('[data-kit]');
-    if (kit) { addKit(kit.dataset.kit, kit); return; }
-    const goal = e.target.closest('[data-addgoal]');
-    if (goal) { addGoal(goal.dataset.addgoal, goal); return; }
     const wz = e.target.closest('[data-open-wizard]');
-    if (wz) { openWizard(); return; }
+    if (wz) { openWizard(wz.dataset.openWizard || null); return; }
     const ga = e.target.closest('[data-goto-aisle]');
     if (ga) { e.preventDefault(); go('catalogo', () => focusAisle(ga.dataset.gotoAisle)); closeAllModals(); return; }
   });
@@ -249,21 +244,8 @@
     openModal('#quickView');
   }
 
-  // ───────── Kits y objetivos ─────────
-  const kitTotal = (items) => items.reduce((a, [id, q]) => a + priceFor(byId[id], q), 0);
-  function addKit(id, el) {
-    const k = D.kits.find((x) => x.id === id);
-    k.items.forEach(([pid, q]) => addToCart(pid, q, 1, k.off, true));
-    flyToCart(el, '📦'); confetti(el);
-    toast('Agregaste el ' + k.name + ' con ' + k.off + '% OFF', 'Ver carrito', openCart);
-  }
-  function addGoal(id, el) {
-    const g = D.goals.find((x) => x.id === id);
-    g.items.forEach(([pid, q]) => addToCart(pid, q, 1, 0, true));
-    flyToCart(el, g.icon); confetti(el);
-    toast('Canasta "' + g.name + '" agregada', 'Ver carrito', openCart);
-  }
-
+  // ───────── Objetivos ─────────
+  const listTotal = (items) => items.reduce((a, [id, q]) => a + priceFor(byId[id], q), 0);
   // ───────── Asistente ─────────
   const wiz = { step: 0, goal: null, size: null };
   const sizes = [
@@ -275,7 +257,7 @@
     if (p.unit === 'u') return Math.max(1, Math.round(q * f));
     const t = q * f; return W.reduce((best, w) => (Math.abs(w - t) < Math.abs(best - t) ? w : best), W[0]);
   }
-  function openWizard() { wiz.step = 0; wiz.goal = null; wiz.size = null; renderWizard(); openModal('#wizard'); }
+  function openWizard(goal) { wiz.goal = goal; wiz.step = goal ? 1 : 0; wiz.size = null; renderWizard(); openModal('#wizard'); }
   function renderWizard() {
     const prog = '<div class="wiz-progress">' + [0, 1, 2].map((i) => '<span class="' + (i <= wiz.step ? 'on' : '') + '"></span>').join('') + '</div>';
     let html = '<button type="button" class="icon-btn modal-close" data-close aria-label="Cerrar">✕</button>' + prog;
@@ -289,7 +271,7 @@
     } else {
       const g = D.goals.find((x) => x.id === wiz.goal); const s = sizes.find((x) => x.id === wiz.size);
       const items = g.items.map(([id, q]) => [id, scaleQty(byId[id], q, s.f)]);
-      const tot = kitTotal(items);
+      const tot = listTotal(items);
       html += '<h2>Tu lista: ' + g.name + '</h2><p>' + s.name + '. Podés cambiar cantidades después en el carrito.</p><div class="wiz-result">' +
         items.map(([id, q]) => { const p = byId[id]; return '<div class="cart-item"><span class="ci-em">' + p.emoji + '</span><div class="ci-n">' + esc(p.name) + '<small>' + wLabel(q, p) + '</small></div><div class="ci-r"><b>' + money(priceFor(p, q)) + '</b></div></div>'; }).join('') +
         '</div><div class="wiz-foot"><button type="button" class="link-btn" data-wback>← Volver</button><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span>Total <b style="font-size:22px">' + money(tot) + '</b></span><button type="button" class="btn btn-primary" data-wadd>Agregar todo al pedido</button></div></div>';
@@ -326,7 +308,7 @@
     let html = '';
     if (!q.trim()) {
       html += '<div class="pal-sec">Búsquedas populares</div><div class="pal-chips">' + ['almendras', 'avena', 'whey', 'chía', 'sin tacc', 'granola'].map((t) => '<button type="button" data-palq="' + t + '">' + t + '</button>').join('') + '</div>';
-      html += '<div class="pal-sec">Pasillos</div>' + D.aisles.map((a) => '<button type="button" class="pal-item" data-goto-aisle="' + a.id + '"><span class="pe">' + a.icon + '</span><span class="pn">' + a.name + '<small>' + a.blurb + '</small></span></button>').join('');
+      html += '<div class="pal-sec">Categorías</div>' + D.aisles.map((a) => '<button type="button" class="pal-item" data-goto-aisle="' + a.id + '"><span class="pe">' + a.icon + '</span><span class="pn">' + a.name + '<small>' + a.blurb + '</small></span></button>').join('');
     } else if (!res.length) {
       html += '<div class="empty" style="margin:8px"><div class="big">🔎</div><h3>No encontramos "' + esc(q) + '"</h3><p>Probá con otra palabra o escribinos por WhatsApp y lo conseguimos.</p></div>';
     } else {
@@ -348,19 +330,6 @@
     if (e.target.closest('[data-palall]')) { const q = $('#palInput').value; closeAllModals(); go('catalogo', () => { $('#catSearch').value = q; cat.q = q; renderCatalog(); }); return; }
     if (e.target.closest('[data-qv]')) { $('#palette').hidden = true; }
   });
-  // Placeholder que "escribe" en el buscador del header
-  (function typer() {
-    const words = ['almendras', 'avena', 'proteína whey', 'harina sin TACC', 'chía', 'granola'];
-    let wi = 0, ci = 0, dir = 1; const el = $('#searchPlaceholder');
-    setInterval(() => {
-      if (!motionOn()) { el.textContent = 'Buscar productos…'; return; }
-      const w = words[wi]; ci += dir;
-      if (ci > w.length + 8) { dir = -1; ci = w.length; }
-      if (ci < 0) { dir = 1; ci = 0; wi = (wi + 1) % words.length; }
-      el.textContent = 'Buscar ' + w.slice(0, Math.max(0, Math.min(ci, w.length))) + (ci <= w.length ? '|' : '…');
-    }, 90);
-  })();
-
   // ───────── Router ─────────
   let view = 'inicio';
   function go(v, after) {
@@ -388,34 +357,16 @@
 
   // ───────── Inicio ─────────
   function renderHome() {
-    const mq = D.aisles.map((a) => '<span>' + a.icon + ' ' + a.name + '</span>').join('');
-    $('#aisleMarquee').innerHTML = mq + mq;
     $('#aisleGrid').innerHTML = D.aisles.map((a, i) => {
-      const n = D.products.filter((p) => p.aisle === a.id).length;
-      return '<button type="button" class="aisle-card reveal" style="--h:' + a.hue + ';--d:' + (i % 3) * 0.08 + 's" data-goto-aisle="' + a.id + '"><span class="aisle-ic">' + a.icon + '</span><span><span class="aisle-num">Pasillo ' + (i + 1) + ' · ' + n + ' productos</span><h3>' + a.name + '</h3><p>' + a.blurb + '</p></span><span class="aisle-go">→</span></button>';
+      return '<button type="button" class="aisle-card reveal" style="--h:' + a.hue + ';--d:' + (i % 3) * 0.08 + 's" data-goto-aisle="' + a.id + '"><span class="aisle-ic">' + a.icon + '</span><span><h3>' + a.name + '</h3><p>' + a.blurb + '</p></span><span class="aisle-go" aria-hidden="true">→</span></button>';
     }).join('');
     const best = D.products.slice().sort((a, b) => b.sales - a.sales).slice(0, 10);
-    $('#bestCarousel').innerHTML = best.map((p, i) => card(p, i, { rank: i + 1 })).join('');
-    $('#goalTabs').innerHTML = D.goals.map((g, i) => '<button type="button" class="goal-tab" role="tab" aria-selected="' + (i === 0) + '" data-goal="' + g.id + '"><span class="gi">' + g.icon + '</span>' + g.name + '</button>').join('');
-    renderGoal(D.goals[0].id);
-    $('#kitGrid').innerHTML = D.kits.map((k, i) => {
-      const full = kitTotal(k.items);
-      return '<article class="kit reveal ' + (i === 0 ? 'featured' : '') + '" style="--d:' + i * 0.1 + 's"><span class="kit-off">−' + k.off + '%</span><div><h3>' + k.name + '</h3><p class="kit-note">' + k.note + '</p></div><div class="kit-stack">' + k.items.map(([id]) => '<span>' + byId[id].emoji + '</span>').join('') + '</div><ul class="kit-items">' + k.items.map(([id, q]) => '<li><span>' + esc(byId[id].name) + '</span><small>' + wLabel(q, byId[id]) + '</small></li>').join('') + '</ul><div class="kit-price"><b>' + money(full * (1 - k.off / 100)) + '</b><s>' + money(full) + '</s></div><button type="button" class="btn ' + (i === 0 ? 'btn-primary' : 'btn-ghost') + ' btn-block" data-kit="' + k.id + '">Agregar kit al pedido</button></article>';
-    }).join('');
-    const rv = D.reviews.map(([n, w, t]) => '<article class="review"><div class="stars">★★★★★</div><q>' + t + '</q><div class="who"><span>' + n[0] + '</span><div><b>' + n + '</b><small>' + w + ' · Google</small></div></div></article>').join('');
+    $('#bestCarousel').innerHTML = best.map((p, i) => card(p, i)).join('');
+    const rv = D.reviews.map(([n, w, t]) => '<article class="review"><div class="stars">★★★★★</div><q>' + t + '</q><div class="who"><span>' + n[0] + '</span><div><b>' + n + '</b><small>' + w + '</small></div></div></article>').join('');
     $('#reviewTrack').innerHTML = rv + rv;
-    $$('[data-count="48"]').forEach((el) => { el.dataset.count = D.products.length; el.textContent = D.products.length; });
     $('#catCountTotal').textContent = D.products.length;
     renderHours();
   }
-  function renderGoal(id) {
-    const g = D.goals.find((x) => x.id === id);
-    $$('.goal-tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.goal === id)));
-    const tot = kitTotal(g.items);
-    $('#goalPanel').innerHTML = '<div class="goal-intro" style="--gc:' + g.color + '" data-icon="' + g.icon + '"><div><h3>' + g.name + '</h3><p>' + g.pitch + '</p></div><div class="gsum">Canasta sugerida<b>' + money(tot) + '</b>' + g.items.length + ' productos</div><button type="button" class="btn" data-addgoal="' + g.id + '">Agregar canasta completa</button></div>' +
-      '<div class="goal-items">' + g.items.map(([pid, q], i) => { const p = byId[pid]; if (p.unit === 'g') selW[pid] = q; return card(p, i); }).join('') + '</div>';
-  }
-  $('#goalTabs').addEventListener('click', (e) => { const t = e.target.closest('[data-goal]'); if (t) renderGoal(t.dataset.goal); });
   function renderHours() {
     let open = false, label = '';
     try {
@@ -433,8 +384,8 @@
   (function orderDemo() {
     const seq = [['mix-premium', 250], ['granola', 500], ['chia', 250], ['pasta-mani', 1], ['almendras', 250]];
     let i = 0, total = 0, timer = null, visible = true;
-    const list = $('#odList'), steps = $$('.od-step');
-    function reset() { i = 0; total = 0; list.innerHTML = ''; paint(); steps.forEach((s, k) => s.classList.toggle('is-on', k === 0)); }
+    const list = $('#odList');
+    function reset() { i = 0; total = 0; list.innerHTML = ''; paint(); }
     function paint() {
       $('#odTotal').textContent = money(total);
       const left = D.freeShipping - total; const bar = $('#odShipBar');
@@ -450,13 +401,12 @@
         li.innerHTML = '<span class="od-em">' + p.emoji + '</span><span class="od-n">' + esc(p.name) + '<small>' + wLabel(q, p) + '</small></span><span class="od-p">' + money(priceFor(p, q)) + '</span>';
         list.appendChild(li); while (list.children.length > 4) list.firstElementChild.remove();
         paint();
-        steps.forEach((s, k) => s.classList.toggle('is-on', k === (i >= 3 ? 1 : 0)));
-      } else if (i === seq.length) { i++; steps.forEach((s, k) => s.classList.toggle('is-on', k === 2)); }
+      } else if (i < seq.length + 2) i++;
       else reset();
     }
     reset();
     if (!motionOn()) { for (let k = 0; k < 4; k++) tick(); return; }
-    timer = setInterval(tick, 1500); tick();
+    timer = setInterval(tick, 1800); tick();
     new IntersectionObserver(([en]) => { visible = en.isIntersecting; }).observe($('#hero'));
   })();
 
@@ -469,37 +419,6 @@
       setTimeout(() => cur.classList.remove('is-out'), 700);
       k = (k + 1) % items.length; items[k].classList.add('is-on');
     }, 3800);
-  })();
-
-  // Partículas: semillas flotando sobre el video
-  (function particles() {
-    const c = $('#heroParticles'); const ctx = c.getContext('2d'); if (!ctx) return;
-    let w, h, dpr, pts = [], mx = -999, my = -999, running = true;
-    function size() { dpr = Math.min(2, window.devicePixelRatio || 1); w = c.clientWidth; h = c.clientHeight; c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
-    function seed() {
-      pts = Array.from({ length: Math.round(Math.min(46, w / 28)) }, () => ({ x: Math.random() * w, y: Math.random() * h, r: 1.5 + Math.random() * 3.5, vx: (Math.random() - 0.5) * 0.25, vy: -0.15 - Math.random() * 0.35, a: Math.random() * Math.PI, hue: [24, 34, 158][Math.floor(Math.random() * 3)], o: 0.25 + Math.random() * 0.45 }));
-    }
-    function frame() {
-      if (!running) return;
-      ctx.clearRect(0, 0, w, h);
-      pts.forEach((p) => {
-        const dx = p.x - mx, dy = p.y - my, d = Math.hypot(dx, dy);
-        if (d < 120) { p.vx += (dx / d) * 0.05; p.vy += (dy / d) * 0.05; }
-        p.vx *= 0.985; p.x += p.vx; p.y += p.vy; p.a += 0.01;
-        if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; p.vy = -0.15 - Math.random() * 0.35; }
-        if (p.x < -10) p.x = w + 10; if (p.x > w + 10) p.x = -10;
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
-        ctx.fillStyle = 'hsla(' + p.hue + ',85%,65%,' + p.o + ')';
-        ctx.beginPath(); ctx.ellipse(0, 0, p.r * 1.6, p.r, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-      });
-      requestAnimationFrame(frame);
-    }
-    size(); seed();
-    window.addEventListener('resize', () => { size(); seed(); });
-    $('#hero').addEventListener('pointermove', (e) => { const r = c.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-    $('#hero').addEventListener('pointerleave', () => { mx = my = -999; });
-    new IntersectionObserver(([en]) => { const was = running; running = en.isIntersecting && motionOn(); if (running && !was) frame(); }).observe($('#hero'));
-    if (!motionOn()) running = false; else frame();
   })();
 
   // Botón magnético
@@ -543,7 +462,7 @@
   }
   const grouped = () => document.body.dataset.catalog === 'pasillos' && !cat.q.trim() && !cat.aisle && !cat.tags.size && cat.max >= 40000 && !cat.stock && cat.sort === 'aisle' && !cat.quick;
   function renderFilters() {
-    $('#fAisles').innerHTML = '<button type="button" class="' + (!cat.aisle ? 'is-on' : '') + '" data-fa=""><span>Todos los pasillos</span><small>' + D.products.length + '</small></button>' +
+    $('#fAisles').innerHTML = '<button type="button" class="' + (!cat.aisle ? 'is-on' : '') + '" data-fa=""><span>Todas</span><small>' + D.products.length + '</small></button>' +
       D.aisles.map((a) => '<button type="button" class="' + (cat.aisle === a.id ? 'is-on' : '') + '" data-fa="' + a.id + '"><span>' + a.icon + ' ' + a.name + '</span><small>' + D.products.filter((p) => p.aisle === a.id).length + '</small></button>').join('');
     $('#fTags').innerHTML = Object.entries(D.tagsInfo).map(([id, t]) => '<button type="button" class="' + (cat.tags.has(id) ? 'is-on' : '') + '" data-ft="' + id + '">' + t.icon + ' ' + t.label + '</button>').join('');
     const pills = '<span class="ap-pill" id="apPill"></span><button type="button" data-ap="" class="' + (!cat.aisle && !grouped() ? '' : '') + '">Todo <small>' + D.products.length + '</small></button>' +
@@ -556,7 +475,6 @@
     const chips = [];
     if (cat.q.trim()) chips.push(['q', '“' + esc(cat.q.trim()) + '”']);
     if (cat.quick === 'starter') chips.push(['quick', '⭐ Lo esencial']);
-    if (cat.quick === 'kits') chips.push(['quick', '📦 Kits']);
     if (cat.aisle) chips.push(['aisle', aisleById[cat.aisle].icon + ' ' + aisleById[cat.aisle].name]);
     cat.tags.forEach((t) => chips.push(['tag:' + t, D.tagsInfo[t].label]));
     if (cat.max < 40000) chips.push(['max', 'Hasta ' + money(cat.max)]);
@@ -571,22 +489,17 @@
     const box = $('#catResults');
     box.classList.toggle('is-list', cat.layout === 'list');
     const draw = () => {
-      if (cat.quick === 'kits') {
-        box.innerHTML = '<div class="kit-grid" style="margin-bottom:32px">' + $('#kitGrid').innerHTML.replace(/ reveal/g, '').replace(/ pre| in/g, '') + '</div>';
-        $('#resultCount').textContent = D.kits.length; return;
-      }
       if (!list.length) {
         box.innerHTML = '<div class="empty"><div class="big">🔎</div><h3>No hay productos con esos filtros</h3><p>Probá quitando alguno o buscá algo más general.</p><div class="sugs">' + ['almendras', 'avena', 'chía', 'whey'].map((s) => '<button type="button" class="btn btn-ghost" data-sug="' + s + '">' + s + '</button>').join('') + '<button type="button" class="btn btn-primary" data-clear>Limpiar filtros</button></div></div>';
         return;
       }
       let html = '';
-      if (cat.quick === 'starter') html += '<div class="guide-banner"><span style="font-size:26px">⭐</span><p><b>Lo esencial para empezar.</b> Los 8 productos que más se repiten en los primeros pedidos. Elegí el peso y sumalos.</p></div>';
+      if (cat.quick === 'starter') html += '<div class="guide-banner"><p><b>Lo esencial para empezar.</b> Los productos que más se repiten en los primeros pedidos. Elegí el peso y agregalos.</p></div>';
       if (grouped()) {
-        html += '<div class="guide-banner"><span style="font-size:26px">🧭</span><p><b>¿Primera vez?</b> Los pasillos están ordenados como el local: arrancá por frutos secos y cereales, y terminá con suplementos e infusiones.</p><button type="button" class="btn btn-primary" data-open-wizard>Armalo por objetivo</button></div>';
         let gi = 0;
-        D.aisles.forEach((a, ai) => {
+        D.aisles.forEach((a) => {
           const items = list.filter((p) => p.aisle === a.id); if (!items.length) return;
-          html += '<section class="aisle-block" id="aisle-' + a.id + '" data-aisle="' + a.id + '"><div class="aisle-block-head" style="--h:' + a.hue + '"><span class="aisle-ic">' + a.icon + '</span><div><h2>' + a.name + '</h2><p>' + a.blurb + '</p></div><span class="aisle-num">Pasillo ' + (ai + 1) + ' de ' + D.aisles.length + '</span></div><div class="p-grid">' + items.map((p) => card(p, gi++)).join('') + '</div></section>';
+          html += '<section class="aisle-block" id="aisle-' + a.id + '" data-aisle="' + a.id + '"><div class="aisle-block-head" style="--h:' + a.hue + '"><span class="aisle-ic">' + a.icon + '</span><div><h2>' + a.name + '</h2><p>' + a.blurb + '</p></div><span class="aisle-num">' + items.length + ' productos</span></div><div class="p-grid">' + items.map((p) => card(p, gi++)).join('') + '</div></section>';
         });
       } else {
         html += '<div class="p-grid">' + list.map((p, i) => card(p, i, { hl: cat.q.trim() })).join('') + '</div>';
@@ -721,10 +634,8 @@
       .from('#orderDemo', { x: soft ? 20 : 80, opacity: 0, duration: 1.2, clearProps: 'transform,opacity' }, '-=1');
     if (!window.ScrollTrigger) return;
     gsap.to('#heroVideo', { yPercent: 18, scale: 1.18, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
-    gsap.to('.hero-copy', { y: -60, opacity: 0.2, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'center center', end: 'bottom top', scrub: true } });
-    gsap.to('#stepsLine', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.steps-grid', start: 'top 75%', end: 'bottom 60%', scrub: true } });
+    gsap.to('.hero-copy', { y: -40, opacity: 0.4, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'center center', end: 'bottom top', scrub: true } });
     $$('.parallax').forEach((el) => gsap.to(el, { y: () => +el.dataset.speed * 600, ease: 'none', scrollTrigger: { trigger: '.local-card', start: 'top bottom', end: 'bottom top', scrub: true } }));
-    gsap.fromTo('.aisle-marquee-track', { x: 0 }, { x: -200, ease: 'none', scrollTrigger: { trigger: '.aisle-marquee', start: 'top bottom', end: 'bottom top', scrub: true } });
   }
 
   // ───────── Init ─────────
