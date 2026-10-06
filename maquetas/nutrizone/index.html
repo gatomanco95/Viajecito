@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NutriZone Maqueta 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="css/nz.css">
+</head>
+<body data-hero="pedido" data-motion="full" data-catalog="pasillos" data-card="ilustrada">
+
+<div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
+
+<!-- Barra de anuncios: rota mensajes en vez de mostrar uno fijo -->
+<div class="announce" role="region" aria-label="Novedades">
+  <div class="announce-track" id="announceTrack">
+    <span>🚚 Envío GRATIS a Gerli en compras mayores a $15.000</span>
+    <span>🎁 15% OFF en tu primera compra con el cupón <b>BIENVENIDA15</b></span>
+    <span>💵 10% de descuento pagando en efectivo en el local</span>
+    <span>🌾 Línea completa Sin TACC, rotulada y separada</span>
+  </div>
+</div>
+
+<header class="header" id="header">
+  <div class="wrap header-inner">
+    <a href="#inicio" class="logo" data-go="inicio" aria-label="NutriZone inicio">
+      <img src="assets/logo.webp" alt="NutriZone" width="56" height="56">
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <span class="nav-pill" id="navPill" aria-hidden="true"></span>
+      <a href="#inicio" data-go="inicio" class="is-active">Inicio</a>
+      <a href="#catalogo" data-go="catalogo">Catálogo</a>
+      <a href="#inicio" data-go="inicio" data-scroll="objetivos">Por objetivo</a>
+      <a href="#inicio" data-go="inicio" data-scroll="kits">Kits</a>
+      <a href="#inicio" data-go="inicio" data-scroll="local">El local</a>
+    </nav>
+    <button class="search-trigger" id="searchTrigger" type="button" aria-label="Buscar productos">
+      <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="search-placeholder" id="searchPlaceholder">Buscar almendras…</span>
+      <kbd>⌘K</kbd>
+    </button>
+    <div class="header-actions">
+      <button class="icon-btn hide-sm" type="button" aria-label="Mi cuenta">
+        <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn cart-btn" id="cartBtn" type="button" aria-label="Abrir carrito">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20.5" r="1.3" fill="currentColor"/><circle cx="17" cy="20.5" r="1.3" fill="currentColor"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ═══════════════════════ INICIO ═══════════════════════ -->
+<section class="view" id="view-inicio" data-view="inicio">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <video class="hero-video" id="heroVideo" autoplay muted loop playsinline poster="assets/hero-poster.webp">
+      <source src="assets/hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-shade"></div>
+    <canvas class="hero-particles" id="heroParticles" aria-hidden="true"></canvas>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="chip-glass hero-kicker" data-hero-in>
+          <span class="dot-live"></span> Stock en vivo · Local en Gerli
+        </span>
+        <h1 class="hero-title" id="heroTitle">
+          <span class="line"><span class="word">Alimentación</span></span>
+          <span class="line"><span class="word">consciente,</span> <span class="word grad-a">al</span> <span class="word grad-a">mejor</span></span>
+          <span class="line"><span class="word grad-b">precio.</span></span>
+        </h1>
+        <p class="hero-sub" data-hero-in>Frutos secos, harinas, semillas y suplementos fraccionados en el momento. Elegí el peso exacto, pagá online y retirá gratis o recibilo en casa.</p>
+        <div class="hero-ctas" data-hero-in>
+          <a href="#catalogo" data-go="catalogo" class="btn btn-primary btn-lg magnetic">
+            <span>Empezar mi pedido</span>
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <button class="btn btn-glass btn-lg" type="button" data-open-wizard>
+            ¿No sabés qué llevar? Te ayudamos
+          </button>
+        </div>
+        <div class="hero-proof" data-hero-in>
+          <div class="avatars"><span>V</span><span>M</span><span>C</span><span>L</span></div>
+          <div><b><span data-count="4.9" data-decimals="1">4.9</span> ★ en Google</b><small><span data-count="500">500</span>+ clientes en Zona Sur</small></div>
+        </div>
+      </div>
+
+      <!-- Tarjeta animada: muestra cómo se arma un pedido -->
+      <aside class="order-demo" id="orderDemo" aria-label="Ejemplo de pedido">
+        <div class="od-head">
+          <span class="od-title">Tu pedido</span>
+          <span class="od-badge">en vivo</span>
+        </div>
+        <ul class="od-list" id="odList"></ul>
+        <div class="od-ship">
+          <div class="od-ship-label"><span id="odShipText">Te faltan $15.000 para envío gratis</span></div>
+          <div class="bar"><span id="odShipBar"></span></div>
+        </div>
+        <div class="od-total"><span>Total</span><b id="odTotal">$0</b></div>
+        <div class="od-steps">
+          <span class="od-step is-on">Elegís</span>
+          <span class="od-step">Pesamos</span>
+          <span class="od-step">Retirás / Enviamos</span>
+        </div>
+      </aside>
+    </div>
+    <div class="hero-scroll" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- MARQUESINA DE PASILLOS -->
+  <div class="aisle-marquee" aria-hidden="true">
+    <div class="aisle-marquee-track" id="aisleMarquee"></div>
+  </div>
+
+  <!-- EMPEZÁ ACÁ: 3 pasos -->
+  <section class="section steps" id="como-comprar">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">¿Primera vez en NutriZone?</span>
+        <h2>Tu pedido en 3 pasos</h2>
+        <p>Así funciona comprar a granel online. Sin vueltas, sin sorpresas.</p>
+      </div>
+      <ol class="steps-grid">
+        <li class="step reveal">
+          <div class="step-art"><span class="step-n">1</span><div class="step-ill ill-pick"><span>🥜</span><span>🌾</span><span>🥣</span></div></div>
+          <h3>Elegí por pasillo u objetivo</h3>
+          <p>Recorré la tienda como en el local, o decinos qué buscás y te armamos la lista.</p>
+        </li>
+        <li class="step reveal">
+          <div class="step-art"><span class="step-n">2</span><div class="step-ill ill-weigh"><div class="scale"><span class="scale-num" data-scale>250 g</span></div></div></div>
+          <h3>Elegí el peso exacto</h3>
+          <p>100 g, 250 g, 500 g o 1 kg. Ves el precio al instante y pesamos en el momento.</p>
+        </li>
+        <li class="step reveal">
+          <div class="step-art"><span class="step-n">3</span><div class="step-ill ill-ship"><span class="truck">🚚</span><span class="road"></span></div></div>
+          <h3>Retirá gratis o recibilo</h3>
+          <p>Retiro express en Coronel Lacarra 1143 o envío. Gratis en Gerli desde $15.000.</p>
+        </li>
+      </ol>
+      <div class="steps-line" aria-hidden="true"><span id="stepsLine"></span></div>
+    </div>
+  </section>
+
+  <!-- POR OBJETIVO -->
+  <section class="section goals" id="objetivos">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Comprá por objetivo</span>
+          <h2>¿Qué querés resolver hoy?</h2>
+          <p>Elegí una opción y te mostramos una canasta lista. La agregás entera o la ajustás.</p>
+        </div>
+      </div>
+      <div class="goal-tabs reveal" role="tablist" id="goalTabs"></div>
+      <div class="goal-panel" id="goalPanel" role="tabpanel"></div>
+    </div>
+  </section>
+
+  <!-- PASILLOS -->
+  <section class="section aisles-sec" id="pasillos">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Recorré la tienda</span>
+          <h2>Pasillos de NutriZone</h2>
+          <p>Ordenados como el local: de lo que más se lleva a lo más específico.</p>
+        </div>
+        <a href="#catalogo" data-go="catalogo" class="link-arrow">Ver catálogo completo →</a>
+      </div>
+      <div class="aisle-grid" id="aisleGrid"></div>
+    </div>
+  </section>
+
+  <!-- MÁS VENDIDOS -->
+  <section class="section best" id="mas-vendidos">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Favoritos de la comunidad</span>
+          <h2>Los más vendidos</h2>
+          <p>Si es tu primera compra, empezá por acá.</p>
+        </div>
+        <div class="carousel-ctrl">
+          <button class="round-btn" type="button" data-car="-1" aria-label="Anterior">←</button>
+          <button class="round-btn" type="button" data-car="1" aria-label="Siguiente">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="carousel" id="bestCarousel"></div>
+  </section>
+
+  <!-- KITS -->
+  <section class="section kits" id="kits">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Tu primer pedido en un clic</span>
+          <h2>Kits armados con descuento</h2>
+          <p>Combinaciones probadas por nuestros clientes. Después lo ajustás en el carrito.</p>
+        </div>
+      </div>
+      <div class="kit-grid" id="kitGrid"></div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ -->
+  <section class="section why">
+    <div class="wrap">
+      <div class="why-grid">
+        <div class="why-big reveal">
+          <div><span class="eyebrow light">Por qué NutriZone</span>
+          <h2>Del bolsón de 25 kg a tu mesa, con la fecha a la vista.</h2></div>
+          <div class="why-stats">
+            <div><b data-count="48">48</b><span>productos a granel</span></div>
+            <div><b data-count="1" data-suffix=" h">1 h</b><span>envío promedio en Gerli</span></div>
+            <div><b data-count="10" data-suffix="%">10%</b><span>off pagando en efectivo</span></div>
+          </div>
+        </div>
+        <div class="why-card reveal"><div class="why-ic">🚚</div><h3>Envíos a todo el país</h3><p>Despachos rápidos o retiro gratis en el local.</p></div>
+        <div class="why-card reveal"><div class="why-ic">🛡️</div><h3>Stock real y fresco</h3><p>Control de lotes y fecha de fraccionado en cada bolsa.</p></div>
+        <div class="why-card reveal"><div class="why-ic">💲</div><h3>Mismo precio online</h3><p>El precio de la web es el del mostrador.</p></div>
+        <div class="why-card reveal"><div class="why-ic">💬</div><h3>Te asesoramos</h3><p>Por WhatsApp antes y después de tu compra.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEÑAS -->
+  <section class="section reviews">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Opiniones reales en Google Maps</span>
+          <h2>Lo que dicen nuestros clientes</h2>
+        </div>
+        <div class="g-score"><b>4.9</b><span>★★★★★</span><small>Comercio destacado en Zona Sur</small></div>
+      </div>
+    </div>
+    <div class="review-marquee"><div class="review-track" id="reviewTrack"></div></div>
+  </section>
+
+  <!-- LOCAL -->
+  <section class="section local" id="local">
+    <div class="wrap">
+      <div class="local-card">
+        <div class="local-copy reveal">
+          <span class="chip-dark">📍 Local a la calle en Gerli / Avellaneda</span>
+          <h2>Vení a visitarnos y elegí tus productos favoritos</h2>
+          <p>Comprá online y retirá sin costo, o vení y te asesoramos en persona.</p>
+          <ul class="checks">
+            <li>Granel pesado en el momento</li>
+            <li>Retiro express de compras web</li>
+            <li>Estacionamiento cómodo</li>
+            <li>Descuento por pago en efectivo</li>
+          </ul>
+          <div class="local-hours" id="localHours"></div>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="https://maps.google.com/?q=Coronel+Lacarra+1143+Gerli" target="_blank" rel="noopener">Cómo llegar</a>
+          </div>
+        </div>
+        <div class="local-photos">
+          <figure class="ph ph-a parallax" data-speed="-0.06"><img src="assets/local-fachada.jpg" alt="Vidriera del local" loading="lazy"><figcaption>Vidriera y acceso</figcaption></figure>
+          <figure class="ph ph-b parallax" data-speed="0.05"><img src="assets/local-interior.jpg" alt="Estanterías del local" loading="lazy"><figcaption>Coronel Lacarra 1143</figcaption></figure>
+          <figure class="ph ph-c parallax" data-speed="-0.03"><img src="assets/local-granel.jpg" alt="Granel seleccionado" loading="lazy"><figcaption>Granel seleccionado</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ═══════════════════════ CATÁLOGO ═══════════════════════ -->
+<section class="view" id="view-catalogo" data-view="catalogo" hidden>
+  <div class="cat-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Ruta"><a href="#inicio" data-go="inicio">Inicio</a> / <span>Catálogo</span></nav>
+      <div class="cat-hero-row">
+        <div>
+          <h1>Catálogo</h1>
+          <p><span id="catCountTotal">48</span> productos ordenados por pasillo, como en el local.</p>
+        </div>
+        <div class="cat-search">
+          <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="catSearch" type="search" placeholder="Buscar por nombre: almendras, avena, whey…" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Atajos para el que no sabe por dónde empezar -->
+      <div class="starter-strip" id="starterStrip">
+        <button type="button" class="starter" data-quick="starter">
+          <span class="starter-ic">⭐</span>
+          <span><b>Lo esencial para empezar</b><small>8 productos que casi todos llevan</small></span>
+        </button>
+        <button type="button" class="starter" data-open-wizard>
+          <span class="starter-ic">🧭</span>
+          <span><b>Armalo por objetivo</b><small>Respondé 2 preguntas</small></span>
+        </button>
+        <button type="button" class="starter" data-quick="kits">
+          <span class="starter-ic">📦</span>
+          <span><b>Kits con descuento</b><small>Hasta 10% OFF</small></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navegación de pasillos (sticky, con scrollspy) -->
+  <div class="aisle-nav" id="aisleNav">
+    <div class="wrap aisle-nav-inner">
+      <button type="button" class="filters-btn" id="filtersBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Filtros <span class="f-count" id="fCount" hidden>0</span>
+      </button>
+      <div class="aisle-pills" id="aislePills"></div>
+    </div>
+  </div>
+
+  <div class="wrap cat-layout">
+    <aside class="filters" id="filters" aria-label="Filtros">
+      <div class="filters-head">
+        <b>Filtros</b>
+        <button type="button" class="link-btn" id="clearFilters">Limpiar</button>
+        <button type="button" class="icon-btn close-sheet" id="closeFilters" aria-label="Cerrar filtros">✕</button>
+      </div>
+      <div class="f-group">
+        <span class="f-title">Pasillo</span>
+        <div id="fAisles" class="f-list"></div>
+      </div>
+      <div class="f-group">
+        <span class="f-title">Preferencias</span>
+        <div id="fTags" class="f-tags"></div>
+      </div>
+      <div class="f-group">
+        <span class="f-title">Precio máx. por 100 g / unidad</span>
+        <input type="range" id="fPrice" min="300" max="40000" step="100" value="40000">
+        <div class="f-range"><span>$300</span><b id="fPriceVal">Sin límite</b></div>
+      </div>
+      <label class="f-switch"><input type="checkbox" id="fStock"> <span>Solo con stock alto</span></label>
+      <button type="button" class="btn btn-primary btn-block show-sheet-only" id="applyFilters">Ver resultados</button>
+    </aside>
+
+    <div class="cat-main">
+      <div class="cat-toolbar">
+        <div class="active-chips" id="activeChips"></div>
+        <div class="toolbar-right">
+          <span class="result-count"><b id="resultCount">48</b> productos</span>
+          <select id="sortSel" aria-label="Ordenar">
+            <option value="aisle">Orden del local</option>
+            <option value="sales">Más vendidos</option>
+            <option value="price-asc">Menor precio</option>
+            <option value="price-desc">Mayor precio</option>
+            <option value="name">A–Z</option>
+          </select>
+          <div class="view-toggle" role="group" aria-label="Vista">
+            <button type="button" class="is-on" data-layout="grid" aria-label="Grilla">▦</button>
+            <button type="button" data-layout="list" aria-label="Lista">☰</button>
+          </div>
+        </div>
+      </div>
+      <div id="catResults" class="cat-results"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div>
+      <img src="assets/logo.webp" alt="NutriZone" width="48" height="48">
+      <p>Tu zona de nutrición. Alimentos naturales a granel y envasados con la máxima frescura.</p>
+      <p class="muted"><b>Local de venta y retiro</b><br>Coronel Lacarra 1143, Gerli (Lanús / Avellaneda)</p>
+    </div>
+    <div><span class="f-h">Navegación</span><a href="#inicio" data-go="inicio">Inicio</a><a href="#catalogo" data-go="catalogo">Catálogo</a><a href="#inicio" data-go="inicio" data-scroll="kits">Kits</a><a href="#inicio" data-go="inicio" data-scroll="local">Quiénes somos</a></div>
+    <div><span class="f-h">Atención</span><p>Lunes a sábados<br><span class="muted">9 a 13 h y 17 a 20 h</span></p><p>Feriados<br><span class="muted">9 a 13 h</span></p><p>WhatsApp: <span class="sel">11-7374-5450</span></p></div>
+  </div>
+  <div class="wrap footer-bottom"><span>© 2026 NutriZone · Maqueta de propuesta</span><span>Diseño: NavWeb</span></div>
+</footer>
+
+<!-- Barra inferior tipo app (solo celular) -->
+<nav class="tabbar" aria-label="Accesos rápidos">
+  <a href="#inicio" data-go="inicio" class="is-active"><span>🏠</span>Inicio</a>
+  <a href="#catalogo" data-go="catalogo"><span>🧺</span>Catálogo</a>
+  <button type="button" data-open-search><span>🔍</span>Buscar</button>
+  <button type="button" data-open-cart><span>🛒</span>Carrito <i class="tab-badge" id="tabBadge" hidden>0</i></button>
+</nav>
+
+<!-- Flotantes (como en la web actual) -->
+<a class="wa-float" href="https://wa.me/5491173745450" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28"><path fill="#fff" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.7a10.7 10.7 0 0 1-5.5-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.7 10.7 0 1 1 16 26.7zm5.9-8c-.3-.2-1.9-1-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8.9 3.8.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c0-.2-.3-.3-.6-.4z"/></svg>
+</a>
+<button class="almond-float" type="button" aria-label="nutrIA asistente"><img src="assets/almond-chat.webp" alt="" width="84" height="56"></button>
+
+<!-- Carrito -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="cartDrawer" aria-label="Carrito" aria-hidden="true">
+  <div class="drawer-head">
+    <h2>Tu pedido</h2>
+    <button class="icon-btn" type="button" id="closeCart" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="ship-meter">
+    <p id="shipText">Agregá $15.000 y el envío a Gerli es gratis</p>
+    <div class="bar"><span id="shipBar"></span><i class="bar-truck" id="shipTruck">🚚</i></div>
+  </div>
+  <div class="delivery-toggle" role="radiogroup" aria-label="Entrega">
+    <button type="button" class="is-on" data-delivery="retiro">🏪 Retiro gratis</button>
+    <button type="button" data-delivery="envio">🚚 Envío</button>
+  </div>
+  <ul class="cart-list" id="cartList"></ul>
+  <div class="cart-upsell" id="cartUpsell"></div>
+  <div class="drawer-foot">
+    <div class="sum-row"><span>Subtotal</span><b id="cartSubtotal">$0</b></div>
+    <div class="sum-row muted" id="cartSaveRow" hidden><span>Ahorro en kits</span><b id="cartSave">$0</b></div>
+    <button type="button" class="btn btn-primary btn-block btn-lg" id="checkoutBtn">Finalizar pedido</button>
+    <small class="muted center">Pagás online o en efectivo al retirar (10% OFF)</small>
+  </div>
+</aside>
+
+<!-- Vista rápida de producto -->
+<div class="modal" id="quickView" hidden role="dialog" aria-modal="true" aria-label="Detalle de producto">
+  <div class="modal-card qv" id="qvCard"></div>
+</div>
+
+<!-- Asistente "¿Qué llevo?" -->
+<div class="modal" id="wizard" hidden role="dialog" aria-modal="true" aria-label="Armá tu pedido">
+  <div class="modal-card wiz" id="wizCard"></div>
+</div>
+
+<!-- Buscador global (⌘K) -->
+<div class="modal modal-top" id="palette" hidden role="dialog" aria-modal="true" aria-label="Buscar">
+  <div class="modal-card palette">
+    <div class="pal-input">
+      <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="palInput" type="search" placeholder="¿Qué estás buscando?" autocomplete="off">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="pal-body" id="palBody"></div>
+  </div>
+</div>
+
+<!-- Panel para probar variantes de la maqueta -->
+<div class="lab" id="lab">
+  <button type="button" class="lab-toggle" id="labToggle" aria-expanded="false" aria-label="Probar variantes">🧪 <span class="lab-txt">Probar variantes</span></button>
+  <div class="lab-panel" id="labPanel" hidden>
+    <b>Laboratorio de la maqueta</b>
+    <p>Cambiá opciones y compará en vivo. Se recuerda en este navegador.</p>
+    <div class="lab-row"><span>Hero</span><div class="seg" data-lab="hero"><button data-v="pedido">Con pedido animado</button><button data-v="clasico">Clásico (actual)</button></div></div>
+    <div class="lab-row"><span>Animaciones</span><div class="seg" data-lab="motion"><button data-v="full">Completas</button><button data-v="soft">Suaves</button><button data-v="off">Sin</button></div></div>
+    <div class="lab-row"><span>Catálogo</span><div class="seg" data-lab="catalog"><button data-v="pasillos">Por pasillos</button><button data-v="grilla">Grilla única</button></div></div>
+    <div class="lab-row"><span>Tarjetas</span><div class="seg" data-lab="card"><button data-v="ilustrada">Ilustradas</button><button data-v="minimal">Minimal</button></div></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
