@@ -36,6 +36,18 @@ Se sacaron los kits, la sección de objetivos (quedó solo dentro del asistente)
 - Grises más oscuros para que se lea mejor.
 - El panel de variantes suma la opción **Tamaño de letra: Grande**.
 
+## Versión 2.2: pensada primero para el celular
+
+El 95% del público entra desde el teléfono, así que el celular manda:
+- **Barra inferior fija** con Inicio, Productos, Buscar, WhatsApp y Carrito. El carrito muestra el total en vivo y la cantidad de productos.
+- **Header simple**: logo y buscador grande.
+- **Inicio corto**: botones a todo el ancho, beneficios en 2×2, categorías en mosaicos de 3×3, "más vendidos" para deslizar con el dedo, pasos en lista compacta y una sola foto del local.
+- **Productos**: tarjetas en 2 columnas con los pesos en 2×2 (más fáciles de tocar), botón "Agregar" de 46 px y un contador que muestra cantidad y peso.
+- **Filtros, detalle del producto y asistente** abren como hojas desde abajo (como en las apps). El buscador ocupa la pantalla completa y el carrito también.
+- Todos los botones miden 38–58 px de alto. Los buscadores usan letra de 16 px o más para que el iPhone no haga zoom solo.
+- Sin efectos "hover" en pantallas táctiles (las tarjetas no quedan levantadas al tocarlas) y sin la demora de doble toque.
+- Probado sin scroll lateral en 320, 360, 390 y 414 px de ancho.
+
 ## Panel "🧪 Probar variantes"
 Abajo a la izquierda. Permite comparar en vivo:
 - Hero: con pedido de ejemplo o solo texto.

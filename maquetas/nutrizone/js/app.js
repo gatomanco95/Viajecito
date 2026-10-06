@@ -71,6 +71,8 @@
     const t = totals();
     const cc = $('#cartCount'); cc.textContent = t.count; cc.classList.toggle('has', t.count > 0);
     const tb = $('#tabBadge'); tb.textContent = t.count; tb.hidden = t.count === 0;
+    $('#tabCartLabel').textContent = t.count ? money(t.sub) : 'Carrito';
+    document.querySelector('.tab-cart').classList.toggle('has', t.count > 0);
     $('#cartSubtotal').textContent = money(t.sub);
     const left = D.freeShipping - t.sub;
     const pct = Math.min(100, (t.sub / D.freeShipping) * 100);
@@ -124,7 +126,7 @@
     t.innerHTML = '<span>' + msg + '</span>' + (action ? '<button type="button">' + action + '</button>' : '');
     if (action) t.querySelector('button').addEventListener('click', () => { fn(); t.remove(); });
     $('#toasts').appendChild(t);
-    while ($('#toasts').children.length > 3) $('#toasts').firstElementChild.remove();
+    while ($('#toasts').children.length > (innerWidth <= 760 ? 1 : 3)) $('#toasts').firstElementChild.remove();
     setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 400); }, 2800);
   }
   function cartTarget() {
@@ -164,7 +166,7 @@
   function addArea(p) {
     const q = getW(p); const n = cartCountFor(p.id, q);
     if (!n) return '<button type="button" class="add-btn" data-add="' + p.id + '">Agregar<span aria-hidden="true">+</span></button>';
-    return '<div class="stepper"><button type="button" data-dec="' + p.id + '" aria-label="Quitar">−</button><span>' + n + ' × ' + wLabel(q, p) + '</span><button type="button" data-inc="' + p.id + '" aria-label="Sumar">+</button></div>';
+    return '<div class="stepper"><button type="button" data-dec="' + p.id + '" aria-label="Quitar">−</button><span>' + n + '<small>' + wLabel(q, p) + '</small></span><button type="button" data-inc="' + p.id + '" aria-label="Sumar">+</button></div>';
   }
   function priceHtml(p) {
     const q = getW(p);
